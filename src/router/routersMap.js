@@ -80,6 +80,17 @@ const data = [
     component: () => import('@/view/jobType/list.vue')
   },
   {
+    title: '平台联系',
+    path: 'linkInfo',
+    icon: 'ios-call',
+    meta: {
+      access: ['admin'],
+      hideInMenu: false,
+      notCache: true
+    },
+    component: () => import('@/view/admin/linkInfo.vue')
+  },
+  {
     title: '后台权限',
     path: 'admin',
     icon: 'ios-paw',

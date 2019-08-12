@@ -32,7 +32,7 @@
           <div style="display: inline-block">
             <span class="font_16 _bold">头像：<img
               :src="avatar?avatar:'http://images.ufutx.com/201905/13/599151d27fc07ba1bc4cc57a291525e5.jpeg'" alt=""
-              width="80px" height="80px" style="box-shadow: 1px 1px 12px #c1c1c1"
+              width="80px" height="80px" style="box-shadow: 1px 1px 12px #c1c1c1;border-radius: 50%;"
               @click="showModal(avatar,'image')"></span>
           </div>
           <div style="display: inline-block;margin-left: 42px;">
@@ -45,7 +45,7 @@
       </Col>
       <Col span="13" offset="1" style="margin-top: 12px;position: relative">
           <Card style="margin-top: 12px;">
-            <p slot="title">已报名兼职<span style="color: #ff0c18;font-weight: bold">（{{recommendTotal}}）</span></p>
+            <p slot="title">已发布的供应/需求<span style="color: #ff0c18;font-weight: bold">（{{recommendTotal}}）</span></p>
             <Table :loading="loading" :columns="recommendColumns" :data="recommendData" style="width: 100%;"
                    border></Table>
             <Page :total="recommendTotal" @on-change="handlePage" :page-size="15"
