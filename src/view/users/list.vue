@@ -108,19 +108,6 @@
             width: 120
           },
           {
-            title: '性别',
-            align: 'center',
-            key: 'sex'
-          },
-          {
-            title: '是否屏蔽',
-            align: 'center',
-            render: (h, params) => {
-              let is_shielded = params.row.is_shielded
-              return h('span', is_shielded==1?'已屏蔽':'未屏蔽')
-            }
-          },
-          {
             title: '加入时间',
             align: 'center',
             key: 'created_at'
