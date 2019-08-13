@@ -2,7 +2,7 @@
   <div v-model="activeTab">
     <Card>
       <Tabs @on-click="getTab">
-        <TabPane label='未完善资料' name="0">
+        <TabPane label='用户列表' name="0">
           <Input
             v-model="searchKeyword"
             @on-enter="createLabel"
@@ -15,19 +15,19 @@
           <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
                 style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
         </TabPane>
-        <TabPane label='已完善资料' name="1">
-          <Input
-            v-model="searchKeyword"
-            @on-enter="createLabel"
-            placeholder="搜索用户..."
-            style="width: 200px; margin-bottom: 22px;"/>
-          <span @click="createLabel">
-                <Button type="primary" icon="ios-search" style="margin-left: 12px; margin-bottom: 22px;">搜索</Button>
-              </span>
-          <Table :loading="loading" :columns="Columns" :data="information" style="width: 100%;" border></Table>
-          <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
-                style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
-        </TabPane>
+        <!--<TabPane label='已完善资料' name="1">-->
+          <!--<Input-->
+            <!--v-model="searchKeyword"-->
+            <!--@on-enter="createLabel"-->
+            <!--placeholder="搜索用户..."-->
+            <!--style="width: 200px; margin-bottom: 22px;"/>-->
+          <!--<span @click="createLabel">-->
+                <!--<Button type="primary" icon="ios-search" style="margin-left: 12px; margin-bottom: 22px;">搜索</Button>-->
+              <!--</span>-->
+          <!--<Table :loading="loading" :columns="Columns" :data="information" style="width: 100%;" border></Table>-->
+          <!--<Page :total="orgTotal" @on-change="handlePage" :page-size="15"-->
+                <!--style="float:right;margin-top:5px;margin-bottom:30px;"></Page>-->
+        <!--</TabPane>-->
       </Tabs>
     </Card>
     <Modal
@@ -194,7 +194,7 @@
       },
       getlist (page=1) {
         let self = this
-        uAxios.get(`admin/users?page=${page}&keyword=${self.searchKeyword}&is_completed=${self.activeTab}`)
+        uAxios.get(`admin/users?page=${page}&keyword=${self.searchKeyword}`)
           .then(res => {
             let result = res.data.data
             self.total = res.data.data.total

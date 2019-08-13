@@ -298,7 +298,7 @@
             }
           })
         } else {
-          uAxios.put(`admin/cancel/cancel/top/supply/and/demands/${id}`).then(response => {
+          uAxios.put(`admin/cancel/top/supply/and/demands/${id}`).then(response => {
             if (response.data.code === 0) {
               this.$Message.success('设置成功!')
               this.switchLoading = false

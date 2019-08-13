@@ -145,6 +145,15 @@
             }
           },
           {
+            title: '类型',
+            align: 'center',
+            render: (h, params) => {
+              return h('div', [
+                h('span', params.row.type == 'SUPPLY'?'供应':'需求')
+              ])
+            }
+          },
+          {
             title: '发布时间',
             align: 'center',
             key: 'created_at'
@@ -164,8 +173,11 @@
                   },
                   on: {
                     click: () => {
-                      this.modal1 = true
-                      // this.job = params.row.job
+                      let argu = {id: params.row.id}
+                      this.$router.push({
+                        name: 'jobDetail',
+                        params: argu
+                      })
                     }
                   }
                 }, '查看详情')

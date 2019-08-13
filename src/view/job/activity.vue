@@ -65,11 +65,11 @@
           </Col>
         </Row>
       </TabPane>
-      <TabPane label='报名成员' name="activity" v-if="id != 0">
-        <Table :loading="loading" :columns="orgColumns" :data="information" style="width: 100%;" border></Table>
-        <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
-              style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
-      </TabPane>
+      <!--<TabPane label='报名成员' name="activity" v-if="id != 0">-->
+        <!--<Table :loading="loading" :columns="orgColumns" :data="information" style="width: 100%;" border></Table>-->
+        <!--<Page :total="orgTotal" @on-change="handlePage" :page-size="15"-->
+              <!--style="float:right;margin-top:5px;margin-bottom:30px;"></Page>-->
+      <!--</TabPane>-->
     </Tabs>
     <Modal v-model="showMapModel" width="860" title="活动地址" @on-ok="ok">
       <Geolocation @getLocation="getLocation" @hideModal="hideModal" :setLocation="setLocation"></Geolocation>
@@ -117,7 +117,7 @@
         disabled: false,
         user_is_admin: 0,
         date: [],
-        title: '兼职详情',
+        title: '供需详情',
         BtnText: '保存',
         loading: false,
         payType: [
@@ -371,7 +371,7 @@
       },
       getJobType () {
         let vm = this
-        uAxios.get('admin/job/categories?nopage=1')
+        uAxios.get('admin/industries?nopage=1')
           .then(res => {
             let result = res.data.data
             console.log(result)
@@ -380,8 +380,7 @@
               typeList.push(
                 {
                   value: item.id,
-                  label: item.name,
-                  children: vm.getJobChildren(item.sub_categories)
+                  label: item.name
                 }
               )
             }

@@ -1,36 +1,36 @@
 <template>
   <Card>
-    <p slot="title" style="color: none;">兼职类型</p>
+    <p slot="title" style="color: none;">行业管理</p>
     <div>
       <Row>
         <Col span="6">
           <p class="title _bold">
-            <span style="margin-right: 12px;">一级目录</span>
+            <span style="margin-right: 12px;">行业列表</span>
             <Button icon="ios-add" class="addType" size="small" @click="handleRender('class')"></Button>
           </p>
           <div class="text-center oneStair" v-for="item,index in information">
             <p class="bc_p">
               <span>{{item.name}}</span>
-              <Icon type="ios-paper-outline" size="18" color="#2D8cF0" style="margin: 0 6px;" @click="amendClass(item.id, item.name)"/>
-              <Icon type="ios-trash-outline" size="18" color="#f50323" @click="deleteClass(item.id)"/>
-              <Icon type="ios-arrow-dropright-circle" size="18" :color="item.active?'#2d8cf0':'#666666'"
-                    style="margin-left: 6px;" @click="getsub(index,item)"/>
+              <Icon type="ios-trash-outline" size="18" color="#f50323" style="float: right;margin: 0 6px;" @click="deleteClass(item.id)"/>
+              <Icon type="ios-paper-outline" size="18" color="#2D8cF0" style="margin: 0 6px; float: right;" @click="amendClass(item.id, item.name)"/>
+              <!--<Icon type="ios-arrow-dropright-circle" size="18" :color="item.active?'#2d8cf0':'#666666'"-->
+                    <!--style="margin-left: 6px;" @click="getsub(index,item)"/>-->
             </p>
           </div>
         </Col>
-        <Col span="4" offset="2" v-if="showSub">
-          <p class="title _bold">
-            <span style="margin-right: 12px;">子目录</span>
-            <Button icon="ios-add" class="addType" size="small" @click="handleRender('sub_class')"></Button>
-          </p>
-          <div class="text-center oneStair" v-for="item,index in sub_categories">
-            <p class="bc_p">
-              <span>{{item.name}}</span>
-              <Icon type="ios-paper-outline" size="18" color="#2D8cF0" style="margin: 0 6px;" @click="amendClass(item.id, item.name)"/>
-              <Icon type="ios-trash-outline" size="18" color="#f50323" @click="deleteClass(item.id)"/>
-            </p>
-          </div>
-        </Col>
+        <!--<Col span="4" offset="2" v-if="showSub">-->
+          <!--<p class="title _bold">-->
+            <!--<span style="margin-right: 12px;">子目录</span>-->
+            <!--<Button icon="ios-add" class="addType" size="small" @click="handleRender('sub_class')"></Button>-->
+          <!--</p>-->
+          <!--<div class="text-center oneStair" v-for="item,index in sub_categories">-->
+            <!--<p class="bc_p">-->
+              <!--<span>{{item.name}}</span>-->
+              <!--<Icon type="ios-paper-outline" size="18" color="#2D8cF0" style="margin: 0 6px;" @click="amendClass(item.id, item.name)"/>-->
+              <!--<Icon type="ios-trash-outline" size="18" color="#f50323" @click="deleteClass(item.id)"/>-->
+            <!--</p>-->
+          <!--</div>-->
+        <!--</Col>-->
       </Row>
     </div>
     <Row>
@@ -76,22 +76,11 @@
         if (this.value.length > 4) {
           return this.$Message.error('为了更好地展示，请不要大于4个字')
         }
-        if (this.valueClass === 'class') {
-          console.log(this.value,'class')
-          uAxios.post('admin/job/categories',{name: this.value})
-            .then(res => {
-              this.$Message.success('添加成功')
-              this.getlist()
-            })
-        } else {
-          console.log(this.value, 'sub_class')
-          console.log(this.parent_id)
-          uAxios.post('admin/job/categories', {name: this.value, parent_id: this.parent_id})
-            .then(res => {
-              this.$Message.success('添加成功')
-              this.getlist()
-            })
-        }
+        uAxios.post('admin/industries', {name: this.value})
+          .then(res => {
+            this.$Message.success('添加成功')
+            this.getlist()
+          })
         this.value = ''
         console.log(this.information)
       },
@@ -101,9 +90,9 @@
         let vm = this
         vm.$Modal.confirm({
           title: '温馨提示',
-          content: '<p>是否确定删除该类目</p>',
+          content: '<p>是否确定删除该行业？</p>',
           onOk: () => {
-            uAxios.delete(`admin/job/categories/${id}`)
+            uAxios.delete(`admin/industries/${id}`)
               .then(res => {
                 vm.$Message.success('删除成功')
                 vm.getlist()
@@ -115,7 +104,7 @@
         let vm = this,
           value = ''
         vm.$Modal.confirm({
-          title: '修改类名',
+          title: '修改行业',
           render: (h) => {
             return h('Input', {
               props: {
@@ -134,7 +123,7 @@
             if (value.length > 4) {
               return this.$Message.error('为了更好地展示，请不要大于4个字')
             }
-            uAxios.put(`admin/job/categories/${id}`, {name: value})
+            uAxios.put(`admin/industries/${id}`, {name: value})
               .then(res => {
                 vm.$Message.success('修改成功')
                 vm.getlist()
@@ -148,29 +137,16 @@
       },
       getlist (page = 1) {
         let self = this
-        uAxios.get('admin/job/categories?nopage=1')
+        uAxios.get('admin/industries?nopage=1')
           .then(res => {
             let result = res.data.data
             self.information = result.map((item, index) => {
               return {
                 name: item.name,
                 id: item.id,
-                active: false,
-                sub_categories: item.sub_categories
+                active: false
               }
             })
-            if (this.parent_id) {
-              for (let item of self.information) {
-                if (item.id == this.parent_id) {
-                  item.active = true
-                  self.sub_categories = item.sub_categories?item.sub_categories:[]
-                }
-              }
-            }else {
-              self.parent_id = self.information[0].id
-              self.information[0].active = true
-              self.sub_categories = self.information[0].sub_categories?self.information[0].sub_categories:[]
-            }
             console.log(self.information)
           })
       }
