@@ -6,18 +6,18 @@
           <Col span="22" style="margin: 22px">
             <Card>
               <Form ref="activity" :model="activity" :label-width="100">
-                <FormItem label="兼职图片" prop="image">
+                <FormItem label="项目图片" prop="image">
                   <Card style="max-width: 400px;">
-                    <uploadImage v-on:uploadPictures="uploadPicture" :pic="jobData.pic"></uploadImage>
+                    <uploadImage v-on:uploadPictures="uploadPicture" :pic="jobData.pics"></uploadImage>
                   </Card>
                 </FormItem>
-                <FormItem label="兼职名称" prop="name">
+                <FormItem label="项目名称" prop="name">
                   <Input v-model="jobData.title" placeholder="Enter title"></Input>
                 </FormItem>
-                <FormItem label="兼职简介" prop="name">
+                <FormItem label="项目简介" prop="name">
                   <Input v-model="jobData.sub_title" placeholder="Enter title"></Input>
                 </FormItem>
-                <FormItem label="兼职状态" prop="name">
+                <FormItem label="项目状态" prop="name">
                   <!--<span style="color: red;">{{jobData.typeName}}</span>-->
                   <RadioGroup v-model="jobData.typeName" @on-change="setStatus">
                     <Radio label="进行中"></Radio>
@@ -26,33 +26,20 @@
                     <Radio label="已取消"></Radio>
                   </RadioGroup>
                 </FormItem>
-                <FormItem label="报名人数(人)" prop="number" v-if="id!==0">
-                  <span style="color: red;">{{jobData.joined_num}}</span>
-                </FormItem>
-                <FormItem label="报酬(￥)" prop="number">
-                  <Row>
-                    <Input v-model="jobData.reward" placeholder="例： 99"></Input>
-                  </Row>
-                </FormItem>
-                <FormItem label="招聘人数(人)" prop="number">
-                  <Row>
-                    <Input v-model="jobData.need_num" placeholder="人数"></Input>
-                  </Row>
-                </FormItem>
-                <FormItem label="兼职类型" prop="number">
+                <FormItem label="项目类型" prop="number">
                   <Cascader :data="jobTypeData" v-model="jobTypeValue" style="max-width:184px" @on-change="CascaderChange"></Cascader>
                 </FormItem>
-                <FormItem label="兼职时间" prop="name">
+                <FormItem label="项目详情" prop="name">
+                  <Row>
+                    <Input v-model="jobData.link_mobile"  type="textarea" placeholder="项目详情" style="max-width: 400px;"></Input>
+                  </Row>
+                </FormItem>
+                <FormItem label="创建时间" prop="name">
                   <Row>
                     <DatePicker type="datetime" format="yyyy-MM-dd HH:mm" placement="top" @on-change="getDate"
                                 placeholder="Select date and time(Excluding seconds)" style="max-width: 400px;"
                                 :value="jobData.job_time"></DatePicker>
                   </Row>
-                </FormItem>
-                <FormItem label="结算方式" prop="number">
-                  <Select v-model="jobData.pay_type" style="max-width:184px">
-                    <Option v-for="item,index in payType" :value="item.type" :key="index">{{ item.title }}</Option>
-                  </Select>
                 </FormItem>
                 <FormItem label="联系人" prop="number">
                   <Row>
@@ -64,29 +51,10 @@
                     <Input v-model="jobData.link_mobile" placeholder="联系电话"></Input>
                   </Row>
                 </FormItem>
-                <FormItem label="联系人微信" prop="number">
-                  <Row>
-                    <Input v-model="jobData.wechat" placeholder="微信号"></Input>
-                  </Row>
-                </FormItem>
-                <FormItem label="联系人邮箱" prop="number">
-                  <Row>
-                    <Input v-model="jobData.link_email" placeholder="邮箱"></Input>
-                  </Row>
-                </FormItem>
-                <FormItem label="联系地址" prop="name">
-                  <Row>
-                    <Input placeholder="右侧地图定位选择地址" :value="address" style="max-width: 400px;margin-right: 22px;"
-                           :readonly="address?false:true" @input="editAddress"/>
-                    <Button type="primary" @click="showMapModel = true">地图定位</Button>
-                  </Row>
-                </FormItem>
-                <FormItem label="报名说明" prop="name">
-                  <div style="max-width: 420px;">
-                    <Input v-model="jobData.explain" placeholder="Enter activity explain" style="font-size: 12px;" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
-                  </div>
-                </FormItem>
                 <FormItem label="兼职详情" prop="name">
+                  <Row>
+                    <Input v-model="jobData.link_mobile" placeholder="联系电话"></Input>
+                  </Row>
                   <editor ref="editor" @on-change="handleChange"/>
                 </FormItem>
               </Form>
@@ -441,7 +409,7 @@
             status = 'CANCELED'
             break
         }
-        uAxios.put(`admin/jobs/${this.id}/status?status=${status}`)
+        uAxios.put(`admin/supply/and/demands/${this.id}/status?status=${status}`)
           .then(res => {
             this.$Message.info('操作成功')
           })
@@ -449,7 +417,7 @@
       getlist (page = 1) {
         let vm = this
         vm.loading = true
-        uAxios.get(`admin/jobs/${vm.id}`)
+        uAxios.get(`admin/supply/and/demands/${vm.id}`)
           .then(res => {
             let result = res.data.data
             if (result.category) {

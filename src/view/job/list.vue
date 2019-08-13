@@ -15,7 +15,7 @@
                                 style=" margin-bottom: 22px;margin-left: 12px;">搜索</Button>
                     </span>
             <span @click="creatParty">
-                        <Button type="success" style=" margin-bottom: 22px; float: right;">创建兼职</Button>
+<!--                        <Button type="success" style=" margin-bottom: 22px; float: right;">创建兼职</Button>-->
                     </span>
             <Table :loading="loading" :columns="Columns" :data="information" style="width: 100%;" border></Table>
             <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
@@ -33,7 +33,7 @@
                                 style=" margin-bottom: 22px;margin-left: 12px;">搜索</Button>
                     </span>
             <span @click="creatParty">
-                        <Button type="success" style=" margin-bottom: 22px; float: right;">创建兼职</Button>
+<!--                        <Button type="success" style=" margin-bottom: 22px; float: right;">创建兼职</Button>-->
                     </span>
             <Table :loading="loading" :columns="Columns" :data="information" style="width: 100%;" border></Table>
             <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
@@ -51,7 +51,7 @@
                                 style=" margin-bottom: 22px;margin-left: 12px;">搜索</Button>
                     </span>
             <span @click="creatParty">
-                        <Button type="success" style=" margin-bottom: 22px; float: right;">创建兼职</Button>
+<!--                        <Button type="success" style=" margin-bottom: 22px; float: right;">创建兼职</Button>-->
                     </span>
             <Table :loading="loading" :columns="Columns" :data="information" style="width: 100%;" border></Table>
             <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
@@ -69,7 +69,7 @@
                                 style=" margin-bottom: 22px;margin-left: 12px;">搜索</Button>
                     </span>
             <span @click="creatParty">
-                        <Button type="success" style=" margin-bottom: 22px; float: right;">创建兼职</Button>
+<!--                        <Button type="success" style=" margin-bottom: 22px; float: right;">创建兼职</Button>-->
                     </span>
             <Table :loading="loading" :columns="Columns" :data="information" style="width: 100%;" border></Table>
             <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
@@ -87,7 +87,7 @@
                                 style=" margin-bottom: 22px;margin-left: 12px;">搜索</Button>
                     </span>
             <span @click="creatParty">
-                        <Button type="success" style=" margin-bottom: 22px; float: right;">创建兼职</Button>
+<!--                        <Button type="success" style=" margin-bottom: 22px; float: right;">创建兼职</Button>-->
                     </span>
             <Table :loading="loading" :columns="Columns" :data="information" style="width: 100%;" border></Table>
             <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
@@ -129,16 +129,16 @@
             key: 'title'
           },
           {
-            title: '兼职图片',
+            title: '图片',
             render: (h, params) => {
               return h('img', {
                 attrs: {
-                  src: params.row.pic
+                  src: params.row.pics[0]
                 },
                 style: {
                   height: '48px',
                   marginTop: '6px',
-                  border: '4px solid #f4f4f4'
+                  border: '2px solid #f4f4f4'
                 },
                 on: {
                   click: () => {
@@ -162,23 +162,17 @@
             },
           },
           {
-            title: '兼职类型',
+            title: '发布类型',
             align: 'center',
             render: (h, params) => {
-              return h('span', params.row.pay_type !== 'DAILY' ? '月结' : '日结')
+              return h('span', params.row.type !== 'SUPPLY' ? '供应' : '需求')
             },
           },
           {
-            title: '招聘时间',
+            title: '发布时间',
             align: 'center',
             width: 100,
-            key: 'job_time'
-          },
-          {
-            title: '招聘人数',
-            align: 'center',
-            width: 100,
-            key: 'need_num'
+            key: 'created_at'
           },
           {
             title: '是否推荐',
@@ -244,20 +238,20 @@
                       })
                     }
                   }
-                }, '兼职详情'),
-                h('Button', {
-                  props: {
-                    type: 'error'
-                  },
-                  style: {
-                    margin: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      this.deleteJob(params.row.id)
-                    }
-                  }
-                }, '删除兼职')
+                }, '查看详情'),
+                // h('Button', {
+                //   props: {
+                //     type: 'error'
+                //   },
+                //   style: {
+                //     margin: '5px'
+                //   },
+                //   on: {
+                //     click: () => {
+                //       this.deleteJob(params.row.id)
+                //     }
+                //   }
+                // }, '删除供需')
                 // h('Button', {
                 //   props: {
                 //     type: 'success'
@@ -291,20 +285,34 @@
         })
       },
       switchFn (val, id) {
+        console.log(val)
         this.switchLoading = true
-        uAxios.put(`admin/top/jobs/${id}`).then(response => {
-          if (response.data.code === 0) {
-            this.$Message.success('设置成功!')
-            this.switchLoading = false
-            this.getlist(1)
-          } else {
-            alert('操作失败！')
-          }
-        })
+        if (val) {
+          uAxios.put(`admin/top/supply/and/demands/${id}`).then(response => {
+            if (response.data.code === 0) {
+              this.$Message.success('设置成功!')
+              this.switchLoading = false
+              this.getlist(1)
+            } else {
+              alert('操作失败！')
+            }
+          })
+        } else {
+          uAxios.put(`admin/cancel/cancel/top/supply/and/demands/${id}`).then(response => {
+            if (response.data.code === 0) {
+              this.$Message.success('设置成功!')
+              this.switchLoading = false
+              this.getlist(1)
+            } else {
+              alert('操作失败！')
+            }
+          })
+        }
+
       },
       is_recommend (val, id) {
         this.recommend = true
-        uAxios.put(`admin/recommend/jobs/${id}`).then(response => {
+        uAxios.put(`admin/recommend/supply/and/demands/${id}`).then(response => {
           if (response.data.code === 0) {
             this.$Message.success('设置成功!')
             this.recommend = false
@@ -353,11 +361,14 @@
       getlist (page=1) {
         let self = this
         self.loading = true
-        uAxios.get(`admin/jobs?page=${page}&keyword=${self.searchKeyword}&status=${self.activeTab}`)
+        uAxios.get(`admin/supply/and/demands?page=${page}&keyword=${self.searchKeyword}&status=${self.activeTab}`)
           .then(res => {
             let result = res.data.data
             self.total = res.data.data.total
             self.information = result.data
+            for (let item of self.information){
+              item.pics = JSON.parse(item.pics)
+            }
             console.log(self.information)
             self.orgTotal = result.total
             self.loading = false

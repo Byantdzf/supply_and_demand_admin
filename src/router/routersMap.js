@@ -60,7 +60,7 @@ const data = [
     component: () => import('@/view/users/list.vue')
   },
   {
-    title: '兼职管理',
+    title: '供需管理',
     path: 'jobList',
     icon: 'ios-wine',
     meta: {
@@ -70,7 +70,7 @@ const data = [
     component: () => import('@/view/job/list.vue')
   },
   {
-    title: '兼职类型',
+    title: '管理行业',
     path: 'jobType',
     icon: 'md-cog',
     meta: {

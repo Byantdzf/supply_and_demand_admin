@@ -26,7 +26,7 @@
           </Row>
         </div>
       </Card>
-      <Col span="10" style="margin: 22px 0;position: relative">
+      <Col span="8" style="margin: 22px 0;position: relative">
         <Card>
           <p slot="title" >用户信息</p>
           <div style="display: inline-block">
@@ -43,7 +43,7 @@
                  style="margin-top: 26px"></Table>
         </Card>
       </Col>
-      <Col span="13" offset="1" style="margin-top: 12px;position: relative">
+      <Col span="15" offset="1" style="margin-top: 12px;position: relative">
           <Card style="margin-top: 12px;">
             <p slot="title">已发布的供应/需求<span style="color: #ff0c18;font-weight: bold">（{{recommendTotal}}）</span></p>
             <Table :loading="loading" :columns="recommendColumns" :data="recommendData" style="width: 100%;"
@@ -116,17 +116,36 @@
         ],
         recommendColumns: [
           {
-            title: '兼职id',
+            title: 'id',
             align: 'center',
             key: 'id'
           },
           {
-            title: '兼职名称',
+            title: '发布名称',
             align: 'center',
-            key: 'name'
+            key: 'title'
           },
           {
-            title: '报名时间',
+            title: '图片',
+            align: 'center',
+            render: (h, params) => {
+              return h('div', [
+                h('Avatar', {
+                  props: {
+                    src: params.row.pics[0],
+                    shape: 'square'
+                  },
+                  style: {
+                    width: '50px',
+                    height: '50px',
+                    margin: '10px 0'
+                  }
+                })
+              ])
+            }
+          },
+          {
+            title: '发布时间',
             align: 'center',
             key: 'created_at'
           },
@@ -146,10 +165,10 @@
                   on: {
                     click: () => {
                       this.modal1 = true
-                      this.job = params.row.job
+                      // this.job = params.row.job
                     }
                   }
-                }, '查看兼职')
+                }, '查看详情')
               ])
             }
           }
@@ -247,18 +266,11 @@
       recommend (page) {
         let self = this
         self.loading = true
-        uAxios.get(`admin/users/${self.id}/applycations?page=${page}`)
+        uAxios.get(`admin/users/${self.id}/supply/and/demands?page=${page}`)
           .then(res => {
             let result = res.data.data
             console.log(result)
-            self.recommendData = result.data.map((item) => {
-              return {
-                id: item.id,
-                name: item.job.title,
-                created_at: item.created_at,
-                job: item.job
-              }
-            })
+            self.recommendData = result.data
             self.recommendTotal = result.total
             self.loading = false
             // self.searchKeyword = ''
@@ -289,34 +301,6 @@
               {
                 name: '手机号',
                 key: result.mobile
-              },
-              {
-                name: '性别',
-                key: result.sex == '1' ? '男' : '女'
-              },
-              {
-                name: '出生日期',
-                key: result.birthday
-              },
-              {
-                name: '地址',
-                key: `${result.dist==null?'未知':result.city + '-' + result.dist}`
-              },
-              {
-                name: '学历',
-                key: result.ducation
-              },
-              {
-                name: '毕业学校',
-                key: result.school
-              },
-              {
-                name: '工作类型',
-                key: result.pay_type == 'DAILY' ? '日结' : '月结'
-              },
-              {
-                name: '活动类型',
-                key: result.work_sort
               },
               {
                 name: '加入时间',
