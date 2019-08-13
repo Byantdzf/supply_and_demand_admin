@@ -7,25 +7,25 @@
       </MenuItem>
     </Menu>
     <Row>
-      <Card shadow>
-        <p slot="title" >管理员操作</p>
-        <div style="width: 100%;">
-          <Row>
-            <i-col span="10">
-              <Card>
-                <div style="width:100%; padding: 12px;border-bottom: 1px solid #d3d3d3;margin-bottom: 12px;">
-                  <span class="font_16 _bold" style="margin-right: 12px;">屏蔽该账户:</span>
-                  <Radio-group v-model="closeCode" @on-change="shieldUser">
-                    <Radio label="关闭"></Radio>
-                    <Radio label="开启"></Radio>
-                  </Radio-group>
-                  <div style="clear: both"></div>
-                </div>
-              </Card>
-            </i-col>
-          </Row>
-        </div>
-      </Card>
+      <!--<Card shadow>-->
+        <!--<p slot="title" >管理员操作</p>-->
+        <!--<div style="width: 100%;">-->
+          <!--<Row>-->
+            <!--<i-col span="10">-->
+              <!--<Card>-->
+                <!--<div style="width:100%; padding: 12px;border-bottom: 1px solid #d3d3d3;margin-bottom: 12px;">-->
+                  <!--<span class="font_16 _bold" style="margin-right: 12px;">屏蔽该账户:</span>-->
+                  <!--<Radio-group v-model="closeCode" @on-change="shieldUser">-->
+                    <!--<Radio label="关闭"></Radio>-->
+                    <!--<Radio label="开启"></Radio>-->
+                  <!--</Radio-group>-->
+                  <!--<div style="clear: both"></div>-->
+                <!--</div>-->
+              <!--</Card>-->
+            <!--</i-col>-->
+          <!--</Row>-->
+        <!--</div>-->
+      <!--</Card>-->
       <Col span="8" style="margin: 22px 0;position: relative">
         <Card>
           <p slot="title" >用户信息</p>
@@ -175,7 +175,7 @@
                     click: () => {
                       let argu = {id: params.row.id}
                       this.$router.push({
-                        name: 'jobDetail',
+                        name: 'Detail',
                         params: argu
                       })
                     }

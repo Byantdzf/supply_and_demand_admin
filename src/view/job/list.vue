@@ -233,7 +233,7 @@
                     click: () => {
                       let argu = {id: params.row.id}
                       this.$router.push({
-                        name: 'jobDetail',
+                        name: 'Detail',
                         params: argu
                       })
                     }
@@ -349,7 +349,7 @@
       creatParty () {
         let argu = {id: 0}
         this.$router.push({
-          name: 'jobDetail',
+          name: 'Detail',
           params: argu
         })
       },

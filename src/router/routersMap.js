@@ -61,7 +61,7 @@ const data = [
   },
   {
     title: '供需管理',
-    path: 'jobList',
+    path: 'supply/and/demands',
     icon: 'ios-wine',
     meta: {
       access: ['admin'],
@@ -71,7 +71,7 @@ const data = [
   },
   {
     title: '管理行业',
-    path: 'jobType',
+    path: 'industries',
     icon: 'md-cog',
     meta: {
       access: ['admin'],
@@ -155,7 +155,7 @@ export const staticRouters = [
     meta: {
       icon: 'logo-windows',
       title: 'admin',
-      access: ['admin'],
+      access: [],
       // notCache: "true",
       hideInMenu: true
     },
@@ -171,10 +171,10 @@ export const staticRouters = [
         component: () => import('@/view/article/detail.vue')
       },
       {
-        path: 'jobDetail/:id',
-        name: 'jobDetail',
+        path: 'Detail/:id',
+        name: 'Detail',
         meta: {
-          title: '兼职详情',
+          title: '供需信息',
           hideInMenu: true
         },
         component: () => import('@/view/job/activity.vue')

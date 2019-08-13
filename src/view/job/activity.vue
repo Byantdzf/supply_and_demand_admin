@@ -8,18 +8,20 @@
               <Form ref="activity" :model="activity" :label-width="100">
                 <FormItem label="项目图片" prop="image">
                   <Card style="max-width: 400px;">
-                    <uploadImage v-on:uploadPictures="uploadPicture" :pic="jobData.pics"></uploadImage>
+                    <uploadImages v-on:uploadPictures="uploadPicture" :pic="jobData.pics"></uploadImages>
                   </Card>
                 </FormItem>
                 <FormItem label="项目名称" prop="name">
                   <Input v-model="jobData.title" placeholder="Enter title"></Input>
                 </FormItem>
-                <FormItem label="项目简介" prop="name">
-                  <Input v-model="jobData.sub_title" placeholder="Enter title"></Input>
+                <FormItem label="项目状态" prop="name">
+                  <RadioGroup v-model="jobData.typeName">
+                    <Radio label="供应"></Radio>
+                    <Radio label="需求"></Radio>
+                  </RadioGroup>
                 </FormItem>
                 <FormItem label="项目状态" prop="name">
-                  <!--<span style="color: red;">{{jobData.typeName}}</span>-->
-                  <RadioGroup v-model="jobData.typeName" @on-change="setStatus">
+                  <RadioGroup v-model="jobData.statusName">
                     <Radio label="进行中"></Radio>
                     <Radio label="已结束"></Radio>
                     <Radio label="待开始"></Radio>
@@ -31,14 +33,21 @@
                 </FormItem>
                 <FormItem label="项目详情" prop="name">
                   <Row>
-                    <Input v-model="jobData.link_mobile"  type="textarea" placeholder="项目详情" style="max-width: 400px;"></Input>
+                    <Input v-model="jobData.content"  type="textarea" placeholder="项目详情" style="max-width: 400px;"></Input>
                   </Row>
                 </FormItem>
-                <FormItem label="创建时间" prop="name">
+                <FormItem label="开始时间" prop="name">
                   <Row>
-                    <DatePicker type="datetime" format="yyyy-MM-dd HH:mm" placement="top" @on-change="getDate"
+                    <DatePicker type="date" format="yyyy-MM-dd" placement="top" @on-change="getDate"
                                 placeholder="Select date and time(Excluding seconds)" style="max-width: 400px;"
-                                :value="jobData.job_time"></DatePicker>
+                                :value="jobData.start_time"></DatePicker>
+                  </Row>
+                </FormItem>
+                <FormItem label="结束时间" prop="name">
+                  <Row>
+                    <DatePicker type="date" format="yyyy-MM-dd" placement="top" @on-change="getDate"
+                                placeholder="Select date and time(Excluding seconds)" style="max-width: 400px;"
+                                :value="jobData.end_time"></DatePicker>
                   </Row>
                 </FormItem>
                 <FormItem label="联系人" prop="number">
@@ -50,12 +59,6 @@
                   <Row>
                     <Input v-model="jobData.link_mobile" placeholder="联系电话"></Input>
                   </Row>
-                </FormItem>
-                <FormItem label="兼职详情" prop="name">
-                  <Row>
-                    <Input v-model="jobData.link_mobile" placeholder="联系电话"></Input>
-                  </Row>
-                  <editor ref="editor" @on-change="handleChange"/>
                 </FormItem>
               </Form>
               <div style="text-align: center">
@@ -86,7 +89,6 @@
   import uploadImage from '../components/uploadImage'
   import dropdown from '../components/dropdown'
   import VDistpicker from 'v-distpicker'
-  import Editor from '_c/editor'
 
   export default {
     components: {
@@ -94,8 +96,7 @@
       uploadImage,
       uploadImages,
       VDistpicker,
-      Geolocation,
-      Editor
+      Geolocation
     },
     watch: {
       value1 () {
@@ -104,7 +105,7 @@
     },
     data () {
       return {
-        jobTypeValue: [1, 1], // 类型
+        jobTypeValue: [1], // 类型
         jobTypeData: [], // 类型数组
         intro: '',
         jobData: {},
@@ -122,12 +123,12 @@
         loading: false,
         payType: [
           {
-            title: '日结',
-            type: 'DAILY'
+            title: '供应',
+            type: 'SUPPLY'
           },
           {
-            title: '月结',
-            type: 'MONTHLY'
+            title: '需求',
+            type: 'DEMAND'
           }
         ],
         columns: [
@@ -258,20 +259,20 @@
         client_id: 0,
         uploaddata: [],
         id: 0,
+        industryID: 0,
         //活动详情
         activity: {}
       }
     },
     methods: {
       CascaderChange(value, selectedData){
-        console.log(value, selectedData)
+        // console.log(value, selectedData)
+        this.industryID = value
+        console.log(this.jobTypeValue)
       },
       handleChange (html, text) {
         this.intro = html
         console.log(this.intro)
-      },
-      changeContent () {
-        this.$refs.editor.setHtml('<p>powered by wangeditor</p>')
       },
       editAddress (value) {
         this.activity.address = value.split(' ')[3]
@@ -318,7 +319,7 @@
       // 提交表单
       handleSubmit () {
         this.jobData.intro = this.intro
-        this.jobData.category_id = this.jobTypeValue[1]
+        this.jobData.industry_id = this.industryID
         if (this.id == 0) {
           uAxios.post(`admin/jobs`, this.jobData).then(response => {
             if (response.data.code === 0) {
@@ -335,8 +336,30 @@
           console.log(this.activity)
           return
         }
+        switch (this.jobData.typeName) {
+          case '供应':
+            this.jobData.type = 'SUPPLY'
+            break
+          case '需求':
+            this.jobData.type = 'DEMAND'
+            break
+        }
+        switch (this.jobData.statusName) {
+          case '进行中':
+            this.jobData.status = 'UNDERWAY'
+            break
+          case '已结束':
+            this.jobData.status = 'FINISHED'
+            break
+          case '待开始':
+            this.jobData.status = 'UNPLAYED'
+            break
+          case '已取消':
+            this.jobData.status = 'CANCELED'
+            break
+        }
         console.log(this.jobData)
-        uAxios.put(`admin/jobs/${this.id}`, this.jobData).then(response => {
+        uAxios.put(`admin/supply/and/demands/${this.id}`, this.jobData).then(response => {
           if (response.data.code === 0) {
             this.$Message.success('保存成功!')
           } else {
@@ -394,7 +417,7 @@
       },
       setStatus () {
         let status = ''
-        switch (this.jobData.typeName) {
+        switch (this.jobData.statusName) {
           case '进行中':
             status = 'UNDERWAY'
             break
@@ -419,25 +442,33 @@
         uAxios.get(`admin/supply/and/demands/${vm.id}`)
           .then(res => {
             let result = res.data.data
-            if (result.category) {
-              vm.jobTypeValue = [result.category.parent_id, result.category.id]
+            if (result.industry) {
+              vm.jobTypeValue = [result.industry.id]
             }
             vm.jobData = result
             switch (result.status) {
               case 'UNDERWAY':
-                vm.jobData.typeName = '进行中'
+                vm.jobData.statusName = '进行中'
                 break
               case 'FINISHED':
-                vm.jobData.typeName = '已结束'
+                vm.jobData.statusName = '已结束'
                 break
               case 'UNPLAYED':
-                vm.jobData.typeName = '待开始'
+                vm.jobData.statusName = '待开始'
                 break
               case 'CANCELED':
-                vm.jobData.typeName = '已取消'
+                vm.jobData.statusName = '已取消'
                 break
             }
-            vm.$refs.editor.setHtml(result.intro)
+            switch (result.type) {
+              case 'SUPPLY':
+                vm.jobData.typeName = '供应'
+                break
+              case 'DEMAND':
+                vm.jobData.typeName = '需求'
+                break
+            }
+
             vm.data = []
             vm.address = `${result.address}`
             vm.setLocation = [result.lng, result.lat]
@@ -447,14 +478,12 @@
     created () {
     },
     mounted () {
-      this.$refs.editor.setHtml('')
       this.getJobType()
       if (this.$route.params.id != 0) {
         this.id = this.$route.params.id
         this.getlist()
         return
       }
-      // this.$refs.editor.customConfig.uploadImgServer = '/upload'
       this.title = this.BtnText = '新增兼职'
     }
   }
