@@ -162,6 +162,12 @@
             },
           },
           {
+            title: '阅读量',
+            align: 'center',
+            width: 100,
+            key: 'click_num'
+          },
+          {
             title: '发布类型',
             align: 'center',
             render: (h, params) => {
@@ -239,19 +245,19 @@
                     }
                   }
                 }, '查看详情'),
-                // h('Button', {
-                //   props: {
-                //     type: 'error'
-                //   },
-                //   style: {
-                //     margin: '5px'
-                //   },
-                //   on: {
-                //     click: () => {
-                //       this.deleteJob(params.row.id)
-                //     }
-                //   }
-                // }, '删除供需')
+                h('Button', {
+                  props: {
+                    type: 'error'
+                  },
+                  style: {
+                    margin: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.deleteJob(params.row.id)
+                    }
+                  }
+                }, '删除供需')
                 // h('Button', {
                 //   props: {
                 //     type: 'success'
@@ -327,7 +333,7 @@
           title: '系统提示',
           content: '<p>是否确认删除？</p>',
           onOk: () => {
-            uAxios.delete(`admin/jobs/${id}`).then(response => {
+            uAxios.delete(`admin/supply/and/demands/${id}`).then(response => {
               if (response.data.code === 0) {
                 this.$Message.success('删除成功!')
                 this.recommend = false

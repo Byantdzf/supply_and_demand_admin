@@ -14,6 +14,9 @@
                 <FormItem label="项目名称" prop="name">
                   <Input v-model="jobData.title" placeholder="Enter title"></Input>
                 </FormItem>
+                <FormItem label="阅读量" prop="name">
+                  <span style="color: #ff740a">{{jobData.click_num}}</span>
+                </FormItem>
                 <FormItem label="项目状态" prop="name">
                   <RadioGroup v-model="jobData.typeName">
                     <Radio label="供应"></Radio>
